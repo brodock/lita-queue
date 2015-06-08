@@ -14,7 +14,7 @@ describe Lita::Handlers::Queue, lita_handler: true do
   it { is_expected.to route_command("queue rotate!").to(:queue_rotate) }
   it { is_expected.to route_command("queue = [something,here]").to(:queue_recreate) }
 
-  let(:channel) { source.room }
+  let(:channel) { source.room || '--global--' }
 
   # Commands
   describe "#queue_list" do
@@ -48,8 +48,8 @@ describe Lita::Handlers::Queue, lita_handler: true do
     context "when I'm not on queue" do
       it "replies with a confirmation message" do
         send_command("queue me")
-        expect(replies.last).to include("added #{user.name} to queue")
-        expect(Lita::Handlers::Queue.fetch_queue(channel)).to include(user.mention_name)
+        expect(replies.last).to include("#{user.name} have been added to queue")
+        expect(subject.fetch_queue(channel)).to include(user.mention_name)
       end
     end
   end
