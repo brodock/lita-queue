@@ -53,4 +53,23 @@ describe Lita::Handlers::Queue, lita_handler: true do
       end
     end
   end
+
+  describe "#unqueue_me" do
+    context "when I'm already queued" do
+      before { subject.store_queue(channel, [user.mention_name]) }
+      it "replies with a confirmation and remove from queue" do
+        send_command("unqueue me")
+        expect(replies.last).to include("#{user.name} have been removed from queue")
+        expect(subject.fetch_queue(channel)).not_to include(user.mention_name)
+      end
+    end
+
+    context "when I'm not on queue" do
+      before { subject.store_queue(channel, []) }
+      it "replies with an error message" do
+        send_command("unqueue me")
+        expect(replies.last).to include("not on queue!")
+      end
+    end
+  end
 end

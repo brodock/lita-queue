@@ -2,13 +2,13 @@ module Lita
   module Handlers
     class Queue < Handler
 
-      route /queue$/, :queue_list, command: :true
-      route /queue me$/, :queue_me, command: :true
-      route /unqueue me$/, :unqueue_me, command: :true
-      route /queue next\?$/, :queue_list_next, command: :true
-      route /queue next!$/, :queue_change_to_next, command: :true
-      route /queue rotate!$/, :queue_rotate, command: :true
-      route /queue = \[([^\]]*)\]\s*$$/, :queue_recreate, command: :true
+      route(/^queue$/, :queue_list, command: :true)
+      route(/^queue me$/, :queue_me, command: :true)
+      route(/^unqueue me$/, :unqueue_me, command: :true)
+      route(/^queue next\?$/, :queue_list_next, command: :true)
+      route(/^queue next!$/, :queue_change_to_next, command: :true)
+      route(/^queue rotate!$/, :queue_rotate, command: :true)
+      route(/^queue = \[([^\]]*)\]\s*$$/, :queue_recreate, command: :true)
 
       # API
 
@@ -50,6 +50,20 @@ module Lita
           queue << me
           store_queue(room, queue)
           response.reply "#{me} have been added to queue: #{queue}"
+        end
+      end
+
+      def unqueue_me(response)
+        room = room_for(response)
+        queue = fetch_queue(room)
+        me = response.user.mention_name
+
+        if queue.include? me
+          queue.delete(me)
+          store_queue(room, queue)
+          response.reply "#{me} have been removed from queue"
+        else
+          response.reply "You are not on queue!"
         end
       end
 
