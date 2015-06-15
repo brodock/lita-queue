@@ -7,8 +7,8 @@ module Lita
       route(/^unqueue me$/, :unqueue_me, command: :true)
       route(/^queue next\?$/, :queue_list_next, command: :true)
       route(/^queue next!$/, :queue_change_to_next, command: :true)
-      route(/^queue rotate!$/, :queue_rotate, command: :true)
-      route(/^queue = \[([^\]]*)\]\s*$$/, :queue_recreate, command: :true)
+      #route(/^queue rotate!$/, :queue_rotate, command: :true)
+      #route(/^queue = \[([^\]]*)\]\s*$$/, :queue_recreate, command: :true)
 
       # API
 
@@ -32,11 +32,7 @@ module Lita
         room = room_for(response)
         queue = fetch_queue(room)
 
-        if queue.empty?
-          response.reply "Queue is empty"
-        else
-          response.reply "Queue for #{room}: #{queue}"
-        end
+        response.reply display_queue(queue, room)
       end
 
       def queue_me(response)
@@ -49,7 +45,7 @@ module Lita
         else
           queue << me
           store_queue(room, queue)
-          response.reply "#{me} have been added to queue: #{queue}"
+          response.reply "#{me} have been added to queue."
         end
       end
 
@@ -61,9 +57,22 @@ module Lita
         if queue.include? me
           queue.delete(me)
           store_queue(room, queue)
-          response.reply "#{me} have been removed from queue"
+          response.reply "#{me} have been removed from queue."
         else
           response.reply "You are not on queue!"
+        end
+      end
+
+      def queue_list_next(response)
+        room = room_for(response)
+        queue = fetch_queue(room)
+
+        if queue.empty?
+          response.reply "Queue is empty"
+        elsif queue.size == 1
+          response.reply "#{queue.first} is the last one on queue."
+        else
+          response.reply "#{queue[1]} will be the next!"
         end
       end
 
@@ -71,24 +80,28 @@ module Lita
         room = room_for(response)
         queue = fetch_queue(room)
 
-        if queue.empty?
-          response.reply "Queue is empty"
-        else
+        unless queue.empty?
           removed = queue.shift
           store_queue(room, queue)
           response.reply "#{removed} have been removed from queue"
-          if queue.empty?
-            response.reply "Queue is empty"
-          else
-            response.reply "Queue for #{room}: #{queue}"
-          end
+          response.reply "#{queue.first} is the next. Go ahead!" unless queue.empty?
         end
+
+        response.reply display_queue(queue, room)
       end
 
       private
 
       def room_for(response)
         response.message.source.room || '--global--'
+      end
+
+      def display_queue(queue, room)
+        if queue.empty?
+          "Queue is empty"
+        else
+          "Queue for #{room}: #{queue}"
+        end
       end
     end
 

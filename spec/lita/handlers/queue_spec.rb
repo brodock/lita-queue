@@ -11,8 +11,8 @@ describe Lita::Handlers::Queue, lita_handler: true do
   it { is_expected.to route_command("unqueue me").to(:unqueue_me) }
   it { is_expected.to route_command("queue next?").to(:queue_list_next) }
   it { is_expected.to route_command("queue next!").to(:queue_change_to_next) }
-  it { is_expected.to route_command("queue rotate!").to(:queue_rotate) }
-  it { is_expected.to route_command("queue = [something,here]").to(:queue_recreate) }
+  #it { is_expected.to route_command("queue rotate!").to(:queue_rotate) }
+  #it { is_expected.to route_command("queue = [something,here]").to(:queue_recreate) }
 
   let(:channel) { source.room || '--global--' }
 
@@ -73,9 +73,35 @@ describe Lita::Handlers::Queue, lita_handler: true do
     end
   end
 
+  describe "#queue_list_next" do
+    context "when queue is empty" do
+      it "replies with an error message" do
+        send_command("queue next?")
+        expect(replies.last).to include("Queue is empty")
+      end
+    end
+
+    context "when queue has only one element" do
+      before { subject.store_queue(channel, [user1.mention_name]) }
+      it "replies listing current user on queue and warning that's the last one" do
+        send_command("queue next?")
+        expect(replies.last).to include(user1.mention_name)
+        expect(replies.last).to include("is the last one on queue")
+      end
+    end
+
+    context "when queue has more than one elements" do
+      before { subject.store_queue(channel, [user1.mention_name, user2.mention_name]) }
+      it "replies listing the next one on the queue" do
+        send_command("queue next?")
+        expect(replies.last).to include(user2.mention_name)
+      end
+    end
+  end
+
   describe "#queue_change_to_next" do
     context "when queue is empty" do
-      it "replies with and error message" do
+      it "replies with an error message" do
         send_command("queue next!")
         expect(replies.last).to include("Queue is empty")
       end
@@ -86,9 +112,10 @@ describe Lita::Handlers::Queue, lita_handler: true do
         subject.store_queue(channel, [user1.mention_name, user2.mention_name])
 
         send_command("queue next!")
+        expect(replies.first).to include("#{user1.mention_name} have been removed from queue")
+        expect(replies[1]).to include("#{user2.mention_name} is the next")
         expect(replies.last).to include(user2.mention_name)
         expect(replies.last).not_to include(user1.mention_name)
-        expect(replies.first).to include("#{user1.mention_name} have been removed from queue")
       end
 
       it "replies with a notification message when removing the last element from queue" do
