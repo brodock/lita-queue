@@ -72,4 +72,32 @@ describe Lita::Handlers::Queue, lita_handler: true do
       end
     end
   end
+
+  describe "#queue_change_to_next" do
+    context "when queue is empty" do
+      it "replies with and error message" do
+        send_command("queue next!")
+        expect(replies.last).to include("Queue is empty")
+      end
+    end
+
+    context "when queue has elements" do
+      it "remove the first element and replies with current queue" do
+        subject.store_queue(channel, [user1.mention_name, user2.mention_name])
+
+        send_command("queue next!")
+        expect(replies.last).to include(user2.mention_name)
+        expect(replies.last).not_to include(user1.mention_name)
+        expect(replies.first).to include("#{user1.mention_name} have been removed from queue")
+      end
+
+      it "replies with a notification message when removing the last element from queue" do
+        subject.store_queue(channel, [user2.mention_name])
+
+        send_command("queue next!")
+        expect(replies.first).to include("#{user2.mention_name} have been removed from queue")
+        expect(replies.last).to include("Queue is empty")
+      end
+    end
+  end
 end

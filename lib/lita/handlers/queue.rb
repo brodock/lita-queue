@@ -67,6 +67,24 @@ module Lita
         end
       end
 
+      def queue_change_to_next(response)
+        room = room_for(response)
+        queue = fetch_queue(room)
+
+        if queue.empty?
+          response.reply "Queue is empty"
+        else
+          removed = queue.shift
+          store_queue(room, queue)
+          response.reply "#{removed} have been removed from queue"
+          if queue.empty?
+            response.reply "Queue is empty"
+          else
+            response.reply "Queue for #{room}: #{queue}"
+          end
+        end
+      end
+
       private
 
       def room_for(response)

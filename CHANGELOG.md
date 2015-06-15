@@ -10,4 +10,5 @@ We follow [Keep a Changelog](http://keepachangelog.com/) format.
   * lita queue
   * lita queue me
   * lita unqueue me
+  * lita queue next!
 - RSpec, Travis CI and Coveralls support
