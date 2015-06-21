@@ -23,7 +23,7 @@ The following commands are available:
 * lita unqueue me
 * lita queue next?
 * lita queue next!
+* lita queue rotate!
 
 The following commands will be available in a further version:
-* lita queue rotate!
 * lita queue = [<new_queue,comma_separated>]
