@@ -4,6 +4,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 We follow [Keep a Changelog](http://keepachangelog.com/) format.
 
+## 0.3.0 - 2015-07-19
+### Modified
+- Correctly using Lita::Room object
+  * create queues based on room ID
+  * display queue using room name metadata
+  * modified specs to catch this change
+
 ## 0.2.0 - 2015-06-21
 ### Added
 - Respond to the following additional command:

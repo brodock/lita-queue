@@ -13,17 +13,19 @@ module Lita
       # API
 
       def fetch_queue(room)
-        serialized = redis.get(room)
+        raise ArgumentError, 'must be a Lita::Room object' unless room.is_a? Lita::Room
+
+        serialized = redis.get(room.id)
 
         if serialized
-          JSON.parse(serialized)
+          MultiJson.load(serialized)
         else
           []
         end
       end
 
       def store_queue(room, queue)
-        redis.set room, queue.to_json
+        redis.set room.id, MultiJson.dump(queue)
       end
 
       # Commands
@@ -107,14 +109,16 @@ module Lita
       private
 
       def room_for(response)
-        response.message.source.room || '--global--'
+        response.message.source.room_object
       end
 
       def display_queue(queue, room)
+        log.debug "displaying info for queue: #{queue.inspect} at #{room.inspect}"
+
         if queue.empty?
           "Queue is empty!"
         else
-          "Queue for #{room}: #{queue}"
+          "Queue for #{room.name}: #{queue}"
         end
       end
     end
