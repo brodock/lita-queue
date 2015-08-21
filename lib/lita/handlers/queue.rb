@@ -118,7 +118,7 @@ module Lita
         if queue.empty?
           t('messages.queue_is_empty')
         else
-          t('messages.list_queue_for_room', room: room.name, queue: queue)
+          render_template('display_queue_for_room', room: room, queue: queue)
         end
       end
     end

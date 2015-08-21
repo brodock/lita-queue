@@ -4,9 +4,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 We follow [Keep a Changelog](http://keepachangelog.com/) format.
 
-## 0.4.0 - next release
+## 0.4.0 - 2015-08-21
 ### Added
 - I18n support
+
+### Changed
+- Fixed channel name on slack, which was incorrectly displaying ID
 
 ## 0.3.0 - 2015-07-19
 ### Modified
