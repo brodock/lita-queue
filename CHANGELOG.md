@@ -11,7 +11,7 @@ We follow [Keep a Changelog](http://keepachangelog.com/) format.
 ### Changed
 - Fixed channel name on slack, which was incorrectly displaying ID
 
-## 0.3.0 - 2015-07-19
+## 0.3.0 - 2015-08-19
 ### Modified
 - Correctly using Lita::Room object
   * create queues based on room ID
