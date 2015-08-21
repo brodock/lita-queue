@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = "lita-queue"
-  spec.version       = "0.3.0"
+  spec.version       = "0.4.0"
   spec.authors       = ["Gabriel Mazetto"]
   spec.email         = ["brodock@gmail.com"]
   spec.description   = "Lita plugin to manage channel specific queue"
