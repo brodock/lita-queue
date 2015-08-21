@@ -2,3 +2,14 @@ en:
   lita:
     handlers:
       queue:
+        messages:
+          added_to_queue: '%{mention} have been added to queue.'
+          already_on_queue: 'You are already on queue!'
+          is_the_last_on_queue: '%{mention} is the last one on queue.'
+          is_the_next_on_queue: '%{mention} will be the next!'
+          is_the_next_on_queue_motivate: '%{mention} is the next. Go ahead!'
+          list_queue_for_room: 'Queue for %{room}: %{queue}'
+          moved_to_the_end_of_queue: '%{mention} has been moved to the end of the queue.'
+          not_on_queue: 'You are not on queue!'
+          queue_is_empty: 'Queue is empty!'
+          removed_from_queue: '%{mention} have been removed from queue.'

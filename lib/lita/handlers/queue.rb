@@ -43,11 +43,11 @@ module Lita
         me = response.user.mention_name
 
         if queue.include? me
-          response.reply "You are already on queue!"
+          response.reply t('messages.already_on_queue')
         else
           queue << me
           store_queue(room, queue)
-          response.reply "#{me} have been added to queue."
+          response.reply t('messages.added_to_queue', mention: me)
         end
       end
 
@@ -59,9 +59,9 @@ module Lita
         if queue.include? me
           queue.delete(me)
           store_queue(room, queue)
-          response.reply "#{me} have been removed from queue."
+          response.reply t('messages.removed_from_queue', mention: me)
         else
-          response.reply "You are not on queue!"
+          response.reply t('messages.not_on_queue')
         end
       end
 
@@ -70,11 +70,11 @@ module Lita
         queue = fetch_queue(room)
 
         if queue.empty?
-          response.reply "Queue is empty"
+          response.reply t('messages.queue_is_empty')
         elsif queue.size == 1
-          response.reply "#{queue.first} is the last one on queue."
+          response.reply t('messages.is_the_last_on_queue', mention: queue.first)
         else
-          response.reply "#{queue[1]} will be the next!"
+          response.reply t('messages.is_the_next_on_queue', mention: queue[1])
         end
       end
 
@@ -85,8 +85,8 @@ module Lita
         unless queue.empty?
           removed = queue.shift
           store_queue(room, queue)
-          response.reply "#{removed} have been removed from queue."
-          response.reply "#{queue.first} is the next. Go ahead!" unless queue.empty?
+          response.reply t('messages.removed_from_queue', mention: removed)
+          response.reply t('messages.is_the_next_on_queue_motivate', mention: queue.first) unless queue.empty?
         end
 
         response.reply display_queue(queue, room)
@@ -99,8 +99,8 @@ module Lita
         unless queue.empty?
           new_queue = queue.rotate
           store_queue(room, new_queue)
-          response.reply "#{queue.first} has been moved to the end of the queue."
-          response.reply "#{new_queue.first} is the next. Go ahead!"
+          response.reply t('messages.moved_to_the_end_of_queue', mention: queue.first)
+          response.reply t('messages.is_the_next_on_queue_motivate', mention: new_queue.first)
         end
 
         response.reply display_queue(queue, room)
@@ -116,9 +116,9 @@ module Lita
         log.debug "displaying info for queue: #{queue.inspect} at #{room.inspect}"
 
         if queue.empty?
-          "Queue is empty!"
+          t('messages.queue_is_empty')
         else
-          "Queue for #{room.name}: #{queue}"
+          t('messages.list_queue_for_room', room: room.name, queue: queue)
         end
       end
     end

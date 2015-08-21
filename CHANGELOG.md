@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 We follow [Keep a Changelog](http://keepachangelog.com/) format.
 
+## 0.4.0 - next release
+### Added
+- I18n support
+
 ## 0.3.0 - 2015-07-19
 ### Modified
 - Correctly using Lita::Room object
