@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 We follow [Keep a Changelog](http://keepachangelog.com/) format.
 
+## 0.5.0 - TO BE RELEASED
+### Added
+- Rubocop codestyle
+
 ## 0.4.0 - 2015-08-21
 ### Added
 - I18n support
