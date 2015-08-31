@@ -1,19 +1,18 @@
 module Lita
   module Handlers
     class Queue < Handler
-
       route(/^queue$/, :queue_list, command: :true)
       route(/^queue me$/, :queue_me, command: :true)
       route(/^unqueue me$/, :unqueue_me, command: :true)
       route(/^queue next\?$/, :queue_list_next, command: :true)
       route(/^queue next!$/, :queue_change_to_next, command: :true)
       route(/^queue rotate!$/, :queue_rotate, command: :true)
-      #route(/^queue = \[([^\]]*)\]\s*$$/, :queue_recreate, command: :true)
+      # route(/^queue = \[([^\]]*)\]\s*$$/, :queue_recreate, command: :true)
 
       # API
 
       def fetch_queue(room)
-        raise ArgumentError, 'must be a Lita::Room object' unless room.is_a? Lita::Room
+        fail ArgumentError, 'must be a Lita::Room object' unless room.is_a? Lita::Room
 
         serialized = redis.get(room.id)
 
