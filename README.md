@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/brodock/lita-queue.svg?branch=master)](https://travis-ci.org/brodock/lita-queue)
 [![Coverage Status](https://coveralls.io/repos/brodock/lita-queue/badge.svg?branch=master)](https://coveralls.io/r/brodock/lita-queue)
+[![Code Climate](https://codeclimate.com/github/brodock/lita-queue/badges/gpa.svg)](https://codeclimate.com/github/brodock/lita-queue)
 
 Lita handler to manage people queue per channel
 
