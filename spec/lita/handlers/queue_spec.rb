@@ -47,10 +47,21 @@ describe Lita::Handlers::Queue, lita_handler: true do
       end
     end
 
-    context "when I'm not on queue" do
+    context "when I'm not on queue, and the queue has someone else" do
+      before { subject.store_queue(room, ['someone']) }
+
       it 'replies with a confirmation message' do
         send_command('queue me', from: room)
         expect(replies.last).to include("#{user.name} have been added to queue")
+        expect(subject.fetch_queue(room)).to include(user.mention_name)
+      end
+    end
+
+    context "when I'm not on queue, and the queue is empty" do
+      it 'replies with a confirmation message' do
+        send_command('queue me', from: room)
+        expect(replies).to include("#{user.name} have been added to queue.")
+        expect(replies).to include("#{user.name} is the next. Go ahead!")
         expect(subject.fetch_queue(room)).to include(user.mention_name)
       end
     end
