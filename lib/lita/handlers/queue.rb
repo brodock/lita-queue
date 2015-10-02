@@ -27,6 +27,19 @@ module Lita
         redis.set room.id, MultiJson.dump(queue)
       end
 
+      def trigger_change(response)
+        room = room_for(response)
+        queue = fetch_queue(room)
+
+        response.reply t('messages.is_the_next_on_queue_motivate',
+                         mention: queue.first)
+
+        robot.trigger(:queue_change,
+                      current: queue.first,
+                      room: room,
+                      queue: queue)
+      end
+
       # Commands
 
       def queue_list(response)
@@ -47,6 +60,7 @@ module Lita
           queue << me
           store_queue(room, queue)
           response.reply t('messages.added_to_queue', mention: me)
+          trigger_change(response) if queue.first == me
         end
       end
 
@@ -85,7 +99,7 @@ module Lita
           removed = queue.shift
           store_queue(room, queue)
           response.reply t('messages.removed_from_queue', mention: removed)
-          response.reply t('messages.is_the_next_on_queue_motivate', mention: queue.first) unless queue.empty?
+          trigger_change(response) unless queue.empty?
         end
 
         response.reply display_queue(queue, room)
@@ -99,7 +113,7 @@ module Lita
           new_queue = queue.rotate
           store_queue(room, new_queue)
           response.reply t('messages.moved_to_the_end_of_queue', mention: queue.first)
-          response.reply t('messages.is_the_next_on_queue_motivate', mention: new_queue.first)
+          trigger_change(response)
         end
 
         response.reply display_queue(queue, room)
